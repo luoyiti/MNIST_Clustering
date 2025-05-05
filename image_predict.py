@@ -144,3 +144,4 @@ def visualize_nearest_prediction(example_tsne, X, clustered_data, example,
         plt.show()
     
     return nearest_point, nearest_label, distance
+
