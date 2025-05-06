@@ -38,7 +38,10 @@ def convert_image_to_mnist_format(image, label=None):
     for i in range(28):
         for j in range(28):
             data[f"{i+1}x{j+1}"] = int(img[i, j])
-    
+    # Filter out pixel values less than 5
+    for key in list(data.keys()):
+        if key != 'label' and data[key] < 20:
+            data[key] = 0
     return pd.DataFrame([data])
 
 def img_to_tsne(img, X_train, tsne_df):
@@ -62,14 +65,12 @@ def img_to_tsne(img, X_train, tsne_df):
         
     # 计算与训练集中所有图像的欧氏距离
     X_train_array = X_train.to_numpy()
-    distances = np.sqrt(np.sum((X_train_array - img_vector)**2, axis=1))
-    
+    distances = np.linalg.norm(X_train_array - img_vector, axis=1)
     # 找到最相似图像的索引
     most_similar_idx = np.argmin(distances)
     
     # 获取该图像在t-SNE空间中的坐标
     tsne_point = tsne_df.iloc[most_similar_idx][['x', 'y']].values
-    
     return tsne_point, most_similar_idx
 
 def visualize_nearest_prediction(example_tsne, X, clustered_data, example, 
@@ -144,4 +145,3 @@ def visualize_nearest_prediction(example_tsne, X, clustered_data, example,
         plt.show()
     
     return nearest_point, nearest_label, distance
-
