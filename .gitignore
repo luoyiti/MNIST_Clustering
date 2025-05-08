@@ -1,3 +1,4 @@
 data/mnist_test.csv
 data/mnist_train.csv
 data/tsne_embedding.pkl
+data/test_tsne_df.pkl
